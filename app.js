@@ -690,6 +690,22 @@ function renderPollCard(poll, forAdmin) {
   viewBtn.type = 'button';
   viewBtn.onclick = () => {
     const isOpen = details.style.display === 'block';
+    
+    if (!isOpen) {
+      // Close all other open poll details first
+      document.querySelectorAll('.poll-details').forEach(otherDetails => {
+        if (otherDetails !== details && otherDetails.style.display === 'block') {
+          otherDetails.style.display = 'none';
+          // Find and reset the corresponding View button
+          const parentCard = otherDetails.closest('.poll-card');
+          if (parentCard) {
+            const otherBtn = parentCard.querySelector('.view-details-btn');
+            if (otherBtn) otherBtn.textContent = 'View ▸';
+          }
+        }
+      });
+    }
+    
     details.style.display = isOpen ? 'none' : 'block';
     viewBtn.textContent = isOpen ? 'View ▸' : 'Hide ▾';
   };
