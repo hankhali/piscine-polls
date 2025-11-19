@@ -497,31 +497,7 @@ function renderPollCard(poll, forAdmin) {
       window.location.href = `/api/polls/${poll.id}/votes/export`;
     };
 
-    const clearVotesBtn = createElement('button', 'admin-clear-btn', '🗑️ Clear');
-    clearVotesBtn.type = 'button';
-    clearVotesBtn.title = 'Clear all votes for this poll';
-    clearVotesBtn.onclick = async () => {
-      if (!confirm(`Are you sure you want to clear ALL votes for "${poll.title}"?\n\nThis action cannot be undone!`)) {
-        return;
-      }
-      try {
-        const res = await fetch(`/api/polls/${poll.id}/votes`, {
-          method: 'DELETE',
-          headers: { 'Content-Type': 'application/json' }
-        });
-        if (res.ok) {
-          alert('All votes cleared successfully!');
-          loadAdminPolls();
-        } else {
-          const data = await res.json();
-          alert('Error: ' + (data.error || 'Failed to clear votes'));
-        }
-      } catch (err) {
-        alert('Error clearing votes: ' + err.message);
-      }
-    };
-
-    const buttonGroup = createElement('div', 'admin-button-group', [editBtn, viewVotesBtn, exportBtn, clearVotesBtn]);
+    const buttonGroup = createElement('div', 'admin-button-group', [editBtn, viewVotesBtn, exportBtn]);
 
     const footer = createElement('div', 'admin-poll-footer', [idLabel, buttonGroup]);
 
