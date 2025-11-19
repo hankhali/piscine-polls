@@ -1,0 +1,90 @@
+╔══════════════════════════════════════════════════════════════╗
+║          🐛 BUG FIX: Poll Type Not Showing                   ║
+╚══════════════════════════════════════════════════════════════╝
+
+ISSUE IDENTIFIED:
+❌ New polls (both multiple-choice and text-response) were not 
+   displaying correctly in student view
+
+ROOT CAUSE:
+1. The backend API was NOT returning the 'poll_type' field
+2. The frontend couldn't determine if poll was multiple-choice 
+   or text-response
+3. The create poll endpoint wasn't saving the poll_type
+
+FIXES APPLIED:
+✅ Fixed app.py line 113: Added poll_type to API response
+✅ Fixed app.py line 133: Added poll_type parsing from request
+✅ Fixed app.py line 139: Updated validation for different poll types
+✅ Fixed app.py line 148: Save poll_type to database
+✅ Fixed app.py line 158: Only create options for multiple_choice polls
+
+WHAT CHANGED IN app.py:
+
+1. list_polls() function now returns:
+   'poll_type': p.get('poll_type', 'multiple_choice')
+
+2. create_poll() function now:
+   - Reads poll_type from request
+   - Validates based on poll type
+   - Saves poll_type to database
+   - Only creates options for multiple_choice polls
+
+╔══════════════════════════════════════════════════════════════╗
+║                    TESTING INSTRUCTIONS                      ║
+╚══════════════════════════════════════════════════════════════╝
+
+🔄 Server has been restarted with fixes!
+
+TEST 1: Create Multiple-Choice Poll
+┌────────────────────────────────────────────────────────────┐
+│ 1. Go to: http://localhost:5001/admin                     │
+│ 2. Login (admin/admin123)                                 │
+│ 3. Create new poll:                                       │
+│    - Title: "🧪 TEST MC: Favorite Color"                  │
+│    - Type: Multiple Choice                                │
+│    - Options: Red, Blue, Green                            │
+│ 4. Click CREATE POLL                                      │
+│ 5. Go to Student View                                     │
+│ 6. ✅ Poll should appear with voting options              │
+└────────────────────────────────────────────────────────────┘
+
+TEST 2: Create Text-Response Poll
+┌────────────────────────────────────────────────────────────┐
+│ 1. In admin panel, create new poll:                       │
+│    - Title: "🧪 TEST TEXT: Your Thoughts"                 │
+│    - Type: Text Response                                  │
+│    - No options needed!                                   │
+│ 2. Click CREATE POLL                                      │
+│ 3. Go to Student View                                     │
+│ 4. ✅ Poll should appear with text input box              │
+└────────────────────────────────────────────────────────────┘
+
+VERIFICATION:
+✅ Refresh the page completely (Cmd+Shift+R)
+✅ Both poll types should now display correctly
+✅ Multiple-choice shows vote buttons
+✅ Text-response shows text area
+
+╔══════════════════════════════════════════════════════════════╗
+║                       IMPORTANT                              ║
+╚══════════════════════════════════════════════════════════════╝
+
+🔴 If you created polls BEFORE this fix, they might still have
+   issues because they were created without poll_type.
+
+💡 SOLUTION: Delete old test polls and create new ones!
+
+   The system will now correctly:
+   • Save poll type when creating
+   • Return poll type in API
+   • Display correct UI based on type
+
+╔══════════════════════════════════════════════════════════════╗
+║                     READY TO TEST!                           ║
+╚══════════════════════════════════════════════════════════════╝
+
+🎯 Start here: http://localhost:5001/admin
+   Try creating both types of polls now!
+
+✅ The fix is live and ready to test!

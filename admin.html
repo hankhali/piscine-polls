@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Polls Admin</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="app"></div>
+    <script>
+      window.APP_ROLE = 'admin';
+      
+      // Check authentication status
+      async function checkAuth() {
+        try {
+          const response = await fetch('/api/admin/check');
+          const data = await response.json();
+          
+          if (!data.logged_in) {
+            // Redirect to login if not authenticated
+            window.location.href = '/login.html';
+          }
+        } catch (error) {
+          console.error('Auth check error:', error);
+          window.location.href = '/login.html';
+        }
+      }
+      
+      // Check auth on page load
+      checkAuth();
+    </script>
+    <script src="app.js"></script>
+  </body>
+</html>
