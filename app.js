@@ -758,12 +758,28 @@ function renderVoteOptions(poll) {
 }
 
 async function toggleAdminVotes(pollId, container, buttonEl) {
+  // If this card is already open, close it
   if (container.dataset.open === '1') {
     container.innerHTML = '';
     container.dataset.open = '0';
     if (buttonEl) buttonEl.textContent = 'View ▸';
     return;
   }
+
+  // Close all other open vote containers first
+  const allContainers = document.querySelectorAll('.admin-votes-container[data-open="1"]');
+  allContainers.forEach(otherContainer => {
+    if (otherContainer !== container) {
+      otherContainer.innerHTML = '';
+      otherContainer.dataset.open = '0';
+      // Find the corresponding button and reset its text
+      const parentCard = otherContainer.closest('.admin-poll-card');
+      if (parentCard) {
+        const viewBtn = parentCard.querySelector('.admin-view-btn');
+        if (viewBtn) viewBtn.textContent = 'View ▸';
+      }
+    }
+  });
 
   container.innerHTML = '<div class="admin-votes-loading">Loading...</div>';
   
