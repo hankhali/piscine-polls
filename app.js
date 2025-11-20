@@ -537,7 +537,7 @@ function renderPollCard(poll, forAdmin) {
       const box = createElement('div', 'poll-stat');
       const label = poll.poll_type === 'text_response' ? 'RESP' : 'VOTES';
       box.appendChild(createElement('div', 'poll-stat-label stat-label-cyan', label));
-      box.appendChild(createElement('div', 'poll-stat-value', String(total)));
+      box.appendChild(createElement('div', 'poll-stat-value', '•••'));
       return box;
     })(),
     (function () {
@@ -569,35 +569,10 @@ function renderPollCard(poll, forAdmin) {
   }
   // Handle multiple choice polls
   else if (poll.options && poll.options.length > 0) {
-    // Add results visualization if user has voted
-    if (alreadyVoted && total > 0) {
-      const resultsTitle = createElement('div', 'student-results-title', '📊 CURRENT RESULTS');
-      candidatesList.appendChild(resultsTitle);
-      
-      const sortedOptions = [...poll.options].sort((a, b) => b.votes - a.votes);
-      sortedOptions.forEach((option, index) => {
-        const percentage = total > 0 ? (option.votes / total * 100) : 0;
-        
-        const resultRow = createElement('div', 'student-result-row');
-        const resultLabel = createElement('div', 'student-result-label', option.name);
-        const barOuter = createElement('div', 'student-bar-outer');
-        const barInner = createElement('div', 'student-bar-inner');
-        barInner.style.width = percentage + '%';
-        
-        // Highlight the winner
-        if (index === 0 && option.votes > 0) {
-          barInner.classList.add('student-bar-winner');
-          resultRow.classList.add('student-result-winner');
-        }
-        
-        const resultValue = createElement('div', 'student-result-value', `${option.votes} votes (${percentage.toFixed(1)}%)`);
-        
-        barOuter.appendChild(barInner);
-        resultRow.appendChild(resultLabel);
-        resultRow.appendChild(barOuter);
-        resultRow.appendChild(resultValue);
-        candidatesList.appendChild(resultRow);
-      });
+    // Add thank you message if user has voted
+    if (alreadyVoted) {
+      const thankYou = createElement('div', 'text-response-submitted', '✅ Thank you for voting!');
+      candidatesList.appendChild(thankYou);
     } else {
       // Show voting buttons if not voted yet
       poll.options.forEach((option) => {
